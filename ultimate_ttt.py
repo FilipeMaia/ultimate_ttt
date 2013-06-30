@@ -7,7 +7,7 @@ import copy
 import sys
 from gui import *
 from engine import *
-    
+from optparse import OptionParser    
     
 
 
@@ -76,9 +76,16 @@ def play(state):
         print "I won the game!"
     elif(winner(state)):
         print "You won the game!"
-        
-state = init(5)
-if(len(sys.argv) > 1 and sys.argv[1] == '--gui'):
-    init_gui(sys.argv)
+
+
+parser = OptionParser()
+parser.add_option("-c", "--cli", action="store_false",dest="gui",default=True,
+                  help="use command line interface")
+parser.add_option("-d", "--depth", dest="depth",default=4,
+                  help="set search depth to DEPTH",metavar="DEPTH")
+(options, args) = parser.parse_args()
+if(options.gui):
+    init_gui(sys.argv,options.depth)
 else:
+    state = init(options.depth)
     play(state)

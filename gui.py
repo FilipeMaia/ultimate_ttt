@@ -3,6 +3,7 @@ from PySide import QtGui,QtCore
 import numpy as np
 import engine
 from new_game import Ui_NewGameDialog
+from about import Ui_AboutDialog
 
 class EngineThread(QtCore.QObject):
     searchFinished = QtCore.Signal(str)
@@ -29,13 +30,16 @@ class BoardScene(QtGui.QGraphicsScene):
 
 class TTTBoard(QtGui.QMainWindow):
     findMove = QtCore.Signal()
-    def __init__(self):
+    def __init__(self,depth):
         QtGui.QMainWindow.__init__(self)        
         # Add menu
         self.gameMenu = self.menuBar().addMenu(self.tr("&Game"));
         self.newGame = QtGui.QAction("New",self)
+        self.aboutGame = QtGui.QAction("About",self)
         self.gameMenu.addAction(self.newGame)
+        self.gameMenu.addAction(self.aboutGame)
         self.newGame.triggered.connect(self.restartGame)
+        self.aboutGame.triggered.connect(self.showAbout)
         self.scene = BoardScene(self)
         self.scene.setSceneRect(0,0,9,9);
         self.board = QtGui.QGraphicsView(self.scene,self)
@@ -48,7 +52,7 @@ class TTTBoard(QtGui.QMainWindow):
             self.restoreGeometry(settings.value("geometry"));
         if(settings.contains("windowState")):
             self.restoreState(settings.value("windowState"));
-        self.restartGame(first=True)
+        self.startGame(depth=depth)
     def closeEvent(self,event):
         settings = QtCore.QSettings()
         settings.setValue("geometry", self.saveGeometry())
@@ -186,7 +190,7 @@ class TTTBoard(QtGui.QMainWindow):
         scale = (side-margin)/9
         transform = QtGui.QTransform (scale, 0, 0, scale, 0, 0 )
         self.board.setTransform(transform)
-    def startGame(self,depth=5,firstMove=0,players=1):
+    def startGame(self,depth,firstMove=0,players=1):
         self.state = engine.init(depth,computer=firstMove,humans=players)
         if(players == 1):
             self.engineThread = EngineThread(self.state)
@@ -214,10 +218,17 @@ class TTTBoard(QtGui.QMainWindow):
                 nPlayers = 2
             self.startGame(depth=ui.depthSlider.value(),firstMove=toMove,
                            players=nPlayers)
-def init_gui(argv):
+    def showAbout(self):
+        dialog = QtGui.QDialog(self)
+        ui = Ui_AboutDialog()
+        ui.setupUi(dialog)
+        ret = dialog.exec_()
+        
+        
+def init_gui(argv,depth):
     QtCore.QCoreApplication.setApplicationName("Ultimate TTT");
     app = QtGui.QApplication(argv)
-    aw = TTTBoard()
+    aw = TTTBoard(depth)
     aw.show()
     ret = app.exec_()
     while(aw.threadHandle.isRunning()):
