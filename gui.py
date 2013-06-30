@@ -48,7 +48,7 @@ class TTTBoard(QtGui.QMainWindow):
             self.restoreGeometry(settings.value("geometry"));
         if(settings.contains("windowState")):
             self.restoreState(settings.value("windowState"));
-        self.startGame()
+        self.restartGame(first=True)
     def closeEvent(self,event):
         settings = QtCore.QSettings()
         settings.setValue("geometry", self.saveGeometry())
@@ -137,27 +137,33 @@ class TTTBoard(QtGui.QMainWindow):
 
     def play(self):
         self.drawBoard()
+        QtCore.QCoreApplication.instance().processEvents()
         if(np.sum(self.state['board'] == 0) == 0):
             msg = QtGui.QMessageBox(QtGui.QMessageBox.NoIcon,"Game Drawn",
                               "It's a draw!", QtGui.QMessageBox.Ok)
+            self.statusBar().showMessage('Game ends in draw.',5000)
             msg.exec_()
             return
         if(engine.winner(self.state) == self.state['computer']):
             msg = QtGui.QMessageBox(QtGui.QMessageBox.NoIcon,"Computer Wins",
                               "I won the game!", QtGui.QMessageBox.Ok)
+            self.statusBar().showMessage('Computer wins the game.',500)
             msg.exec_()
             return
         elif(engine.winner(self.state)):
             msg = QtGui.QMessageBox(QtGui.QMessageBox.NoIcon,"Player Wins",
                               "You won the game!", QtGui.QMessageBox.Ok)
+            self.statusBar().showMessage('You win the game.',5000)
             msg.exec_()
             return
 
         while(engine.winner(self.state) == 0):
             self.drawBoard()
             if(self.state['to_move'] != self.state['computer']):
+                self.statusBar().showMessage('Player turn')
                 return
             else:
+                self.statusBar().showMessage('Computer turn. Thinking...')
                 self.findMove.emit()
                 return
 
@@ -165,10 +171,11 @@ class TTTBoard(QtGui.QMainWindow):
         move = engine.row_col_to_pos(row,col)
         valid,msg = engine.valid_move(self.state,move,verbose=False,
                                       returnMessage=True)
-        self.statusBar().showMessage(msg,5000)
         if(valid):
             engine.make_move(self.state,move)
             self.play()
+        else:
+            self.statusBar().showMessage(msg,5000)
     def computerMove(self,move):
         engine.make_move(self.state,move)
         self.play()
@@ -189,13 +196,14 @@ class TTTBoard(QtGui.QMainWindow):
             self.engineThread.moveToThread(self.threadHandle)
             self.threadHandle.start()
         self.play()
-    def restartGame(self):
+    def restartGame(self,first=False):
         dialog = QtGui.QDialog(self)
         ui = Ui_NewGameDialog()
         ui.setupUi(dialog)
         ret = dialog.exec_()
         if(ret):
-            self.threadHandle.terminate()
+            if(not first):
+                self.threadHandle.terminate()
             toMove = 0
             if(ui.computerRadio.isChecked()):
                 toMove = 1

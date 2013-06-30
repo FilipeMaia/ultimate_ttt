@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'new_game.ui'
 #
-# Created: Sun Jun 30 01:02:51 2013
+# Created: Sun Jun 30 21:50:05 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_NewGameDialog(object):
     def setupUi(self, NewGameDialog):
         NewGameDialog.setObjectName("NewGameDialog")
-        NewGameDialog.resize(399, 272)
+        NewGameDialog.resize(424, 257)
         self.gridLayout = QtGui.QGridLayout(NewGameDialog)
         self.gridLayout.setObjectName("gridLayout")
         self.groupBox_2 = QtGui.QGroupBox(NewGameDialog)
@@ -53,31 +53,25 @@ class Ui_NewGameDialog(object):
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.label_3 = QtGui.QLabel(self.depthGroup)
-        self.label_3.setObjectName("label_3")
-        self.horizontalLayout_2.addWidget(self.label_3)
         self.depthSlider = QtGui.QSlider(self.depthGroup)
-        self.depthSlider.setMinimum(2)
-        self.depthSlider.setMaximum(9)
-        self.depthSlider.setProperty("value", 5)
+        self.depthSlider.setMinimum(1)
+        self.depthSlider.setMaximum(8)
+        self.depthSlider.setProperty("value", 3)
         self.depthSlider.setOrientation(QtCore.Qt.Horizontal)
         self.depthSlider.setObjectName("depthSlider")
         self.horizontalLayout_2.addWidget(self.depthSlider)
-        self.label_4 = QtGui.QLabel(self.depthGroup)
-        self.label_4.setObjectName("label_4")
-        self.horizontalLayout_2.addWidget(self.label_4)
         self.verticalLayout_3.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setSpacing(-1)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label = QtGui.QLabel(self.depthGroup)
-        self.label.setObjectName("label")
-        self.horizontalLayout.addWidget(self.label)
-        spacerItem = QtGui.QSpacerItem(218, 17, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.label_3 = QtGui.QLabel(self.depthGroup)
+        self.label_3.setObjectName("label_3")
+        self.horizontalLayout.addWidget(self.label_3)
+        self.depthValue = QtGui.QLabel(self.depthGroup)
+        self.depthValue.setObjectName("depthValue")
+        self.horizontalLayout.addWidget(self.depthValue)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.label_2 = QtGui.QLabel(self.depthGroup)
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout.addWidget(self.label_2)
         self.verticalLayout_3.addLayout(self.horizontalLayout)
         self.gridLayout.addWidget(self.depthGroup, 1, 0, 1, 2)
 
@@ -86,10 +80,11 @@ class Ui_NewGameDialog(object):
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), NewGameDialog.reject)
         QtCore.QObject.connect(self.vsPlayerRadio, QtCore.SIGNAL("toggled(bool)"), self.firstToMoveGroup.setDisabled)
         QtCore.QObject.connect(self.vsPlayerRadio, QtCore.SIGNAL("toggled(bool)"), self.depthGroup.setDisabled)
+        QtCore.QObject.connect(self.depthSlider, QtCore.SIGNAL("valueChanged(int)"), self.depthValue.setNum)
         QtCore.QMetaObject.connectSlotsByName(NewGameDialog)
 
     def retranslateUi(self, NewGameDialog):
-        NewGameDialog.setWindowTitle(QtGui.QApplication.translate("NewGameDialog", "New Game", None, QtGui.QApplication.UnicodeUTF8))
+        NewGameDialog.setWindowTitle(QtGui.QApplication.translate("NewGameDialog", "Ultimate TTT - New Game", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("NewGameDialog", "Players:", None, QtGui.QApplication.UnicodeUTF8))
         self.vsComputerRadio.setText(QtGui.QApplication.translate("NewGameDialog", "Computer vs. Player", None, QtGui.QApplication.UnicodeUTF8))
         self.vsPlayerRadio.setText(QtGui.QApplication.translate("NewGameDialog", "Player vs. Player", None, QtGui.QApplication.UnicodeUTF8))
@@ -98,8 +93,6 @@ class Ui_NewGameDialog(object):
         self.computerRadio.setText(QtGui.QApplication.translate("NewGameDialog", "Computer", None, QtGui.QApplication.UnicodeUTF8))
         self.playerRadio.setText(QtGui.QApplication.translate("NewGameDialog", "Player", None, QtGui.QApplication.UnicodeUTF8))
         self.depthGroup.setTitle(QtGui.QApplication.translate("NewGameDialog", "Computer Search Depth:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setText(QtGui.QApplication.translate("NewGameDialog", "2", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setText(QtGui.QApplication.translate("NewGameDialog", "9", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("NewGameDialog", "Easy", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("NewGameDialog", "Hard", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("NewGameDialog", "Search Depth:", None, QtGui.QApplication.UnicodeUTF8))
+        self.depthValue.setText(QtGui.QApplication.translate("NewGameDialog", "3", None, QtGui.QApplication.UnicodeUTF8))
 

@@ -6,10 +6,10 @@ import copy
 def init(depth,computer=0,humans=1):
     state = {}
     state['depth'] = depth
-    state['board'] = np.zeros([9,9])
+    state['board'] = np.zeros([9,9],dtype=np.int8)
     state['to_move'] = 1
-    state['finished'] = np.zeros([9,9])
-    state['focus'] = np.ones([9,9])
+    state['finished'] = np.zeros([9,9],dtype=np.int8)
+    state['focus'] = np.ones([9,9],dtype=np.int8)
     state['last_move'] = 0
     state['humans'] = humans
     if(humans == 2):
@@ -155,6 +155,15 @@ def negamax(state,depth,alpha,beta,color):
         
     
 def score_line(line,state):
+    empty = sum(line == 0)
+    if(empty > 1):
+        return 0
+    if(empty == 0):
+        if(np.all(line == state['computer'])):
+           return 100
+        if(np.all(line == state['human'])):
+           return -100
+        return 0
     if(state['computer'] == 1):
         sign = 1
     elif(state['computer'] == 2):
@@ -180,17 +189,13 @@ def score_miniboard(mini_board,state):
     # Check columns
     for c in range(0,3):
         score += score_line(mini_board[:,c],state)
-
     # Check diagonals
-    if(mini_board[1,1] == 0):
-        return 0
-    if(mini_board[0,0] == mini_board[1,1] == mini_board[2,2]):
-        return mini_board[1,1]
-    if(mini_board[2,0] == mini_board[1,1] == mini_board[0,2]):
-        return mini_board[1,1]
+    score += score_line(np.array([mini_board[0,0],mini_board[1,1],mini_board[2,2]]),state)
+    score += score_line(np.array([mini_board[2,0],mini_board[1,1],mini_board[0,2]]),state)
+    return score
 
 
-def score(state):
+def score_old(state):
     score = 0
     w = winner(state)
     if(w == state['computer']):
@@ -202,10 +207,18 @@ def score(state):
     
     return score
 
+def score(state):
+    score = 0
+    score += score_miniboard(state['finished'][::3,::3],state)*100
+    for r in range(0,3):
+        for c in range(0,3):
+            score += score_miniboard(state['board'][r*3:(r+1)*3,c*3:(c+1)*3],state)
+    return score
+
 def gen_moves(state):
     return np.where(np.logical_and(state['board'] == 0,state['focus'] == 1))
 
 def find_move(state):
     score,move_chain = negamax(state,state['depth'],float('-inf'),float('inf'),1)
-#    print "%s: %s" %(move_chain,score)
+    #    print "%s: %s" %(move_chain,score)
     return move_chain[0]

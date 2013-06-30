@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>399</width>
-    <height>272</height>
+    <width>424</width>
+    <height>257</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>New Game</string>
+   <string>Ultimate TTT - New Game</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -92,32 +92,18 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>2</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QSlider" name="depthSlider">
           <property name="minimum">
-           <number>2</number>
+           <number>1</number>
           </property>
           <property name="maximum">
-           <number>9</number>
+           <number>8</number>
           </property>
           <property name="value">
-           <number>5</number>
+           <number>3</number>
           </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>9</string>
           </property>
          </widget>
         </item>
@@ -129,9 +115,16 @@
          <number>-1</number>
         </property>
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>Easy</string>
+           <string>Search Depth:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="depthValue">
+          <property name="text">
+           <string>3</string>
           </property>
          </widget>
         </item>
@@ -142,18 +135,11 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>218</width>
-            <height>17</height>
+            <width>40</width>
+            <height>20</height>
            </size>
           </property>
          </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Hard</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </item>
@@ -225,6 +211,22 @@
     <hint type="destinationlabel">
      <x>199</x>
      <y>170</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>depthSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>depthValue</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>197</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>198</x>
+     <y>197</y>
     </hint>
    </hints>
   </connection>
